@@ -12,16 +12,34 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate,
 UINavigationControllerDelegate {
 
     @IBOutlet weak var imagePickerView: UIImageView!
+     @IBOutlet weak var topText: UITextField!
+    @IBOutlet weak var bottomText: UITextField!
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+     
+        
+        //set up text
+        let memeTextAttributes:[String:Any] = [
+            NSStrokeColorAttributeName: UIColor.blackColor,
+            NSForegroundColorAttributeName: UIColor.whiteColor(),
+            NSFontAttributeName: UIFont(name: "HelveticaNeue-CondensedBlack", size: 40)!,
+            NSStrokeWidthAttributeName: UIColor.clearColor(),
+        
+        topText.defaultTextAttributes = memeTextAttributes
+      bottomText.defaultTextAttributes = memeTextAttributes
+     
+      
     }
 
-  
+    
+    //dismisses the keyboard when return is pressed
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true; }
 
     @IBAction func pickAnImage(_ sender: Any) {
-        let pickController = UIImagePickerController()
-        self.present(pickController, animated: true, completion: nil)
+        
         
         let imagePicker = UIImagePickerController()
         imagePicker.delegate = self
@@ -38,6 +56,23 @@ UINavigationControllerDelegate {
         }
         self.dismiss(animated: true, completion: nil)
     }
+    @IBAction func pickAnImageFromAlbum(_ sender: Any) {
+        
+        let imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
+        imagePicker.sourceType = .photoLibrary
+        present(imagePicker, animated: true, completion: nil)
+    }
+    @IBAction func pickAnImageFromCamera(_ sender: Any) {
+        
+        let imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
+        present(imagePicker, animated: true, completion: nil)
+        
+        
+    }
+
+    
     }
     
 
