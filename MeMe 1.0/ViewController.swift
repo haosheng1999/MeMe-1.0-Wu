@@ -18,21 +18,16 @@ UINavigationControllerDelegate {
         super.viewDidLoad()
         
      
-        
         //set up text
         let memeTextAttributes:[String:Any] = [
-            NSStrokeColorAttributeName: UIColor.blackColor,
-            NSForegroundColorAttributeName: UIColor.whiteColor(),
-            NSFontAttributeName: UIFont(name: "HelveticaNeue-CondensedBlack", size: 40)!,
-            NSStrokeWidthAttributeName: UIColor.clearColor(),
-        
+            NSAttributedStringKey.strokeColor.rawValue: UIColor.black,
+            NSAttributedStringKey.foregroundColor.rawValue: UIColor.white,
+            NSAttributedStringKey.font.rawValue:UIFont(name: "HelveticaNeue-CondensedBlack", size: 40)!,
+            NSAttributedStringKey.strokeWidth.rawValue: UIColor.clear]
         topText.defaultTextAttributes = memeTextAttributes
-      bottomText.defaultTextAttributes = memeTextAttributes
+        bottomText.defaultTextAttributes = memeTextAttributes
      
-      
     }
-
-    
     //dismisses the keyboard when return is pressed
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
@@ -68,11 +63,32 @@ UINavigationControllerDelegate {
         let imagePicker = UIImagePickerController()
         imagePicker.delegate = self
         present(imagePicker, animated: true, completion: nil)
+        }
+    
+    @objc func keyboardWillShow(_ notification:Notification) {
         
-        
+        view.frame.origin.y = 0 - getKeyboardHeight(notification)
     }
+    
+    func getKeyboardHeight(_ notification:Notification) -> CGFloat {
+        
+        let userInfo = notification.userInfo
+        let keyboardSize = userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue // of CGRect
+        return keyboardSize.cgRectValue.height
+    }
+    
+    func subscribeToKeyboardNotifications() {
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: .UIKeyboardWillShow, object: nil)
+    }
+    
+    func unsubscribeFromKeyboardNotifications() {
+        
+        NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillShow, object: nil)
+    }
+    
+}
 
     
-    }
-    
 
+    
